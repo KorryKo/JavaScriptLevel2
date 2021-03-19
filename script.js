@@ -17,7 +17,7 @@ const goods = [{
 ];
 
 const renderGoods = (goodsList = goods) => {
-    goodsList.map(good => {
+    goodsList.forEach(good => {
 
         let goodItem = document.createElement("div")
         goodItem.className = "goods-item"
