@@ -1,77 +1,137 @@
 class GoodsItem {
-    constructor(title, price) {
-        this.title = title;
-        this.price = price;
+    constructor(good, index, cartList) {
+        this.good = good;
+        this.index = index;
+        this.title = good.title;
+        this.price = good.price;
+        this.cartList = cartList;
     }
+
     render() {
-        return `<div class="goods-item"><h3>${this.title}</h3><p>${this.price}</p><button class="buy-button">Купить</button></div>`;
+        let goodsItemDiv = document.createElement('div');
+        goodsItemDiv.className = 'goods-item';
+
+        let goodTitle = document.createElement('h3');
+        goodTitle.innerHTML = this.title;
+
+        let goodPrice = document.createElement('p');
+        goodPrice.innerHTML = this.price;
+
+        let goodBuyButton = document.createElement('button');
+        goodBuyButton.className = 'buy-button';
+        goodBuyButton.innerHTML = 'Купить'
+        goodBuyButton.onclick = () => this.cartList.addToCart(this.good, this.index);
+
+        goodsItemDiv.appendChild(goodTitle);
+        goodsItemDiv.appendChild(goodPrice);
+        goodsItemDiv.appendChild(goodBuyButton);
+        return goodsItemDiv;
+
     }
 }
+
 class GoodsList {
     constructor() {
-        this.goods = [];
+        this.cartList = new CartList;
+        this.goods = []
     }
-    fetchGoods() {
-        this.goods = [{
-                title: 'Shirt',
-                price: 150
-            },
-            {
-                title: 'Socks',
-                price: 50
-            },
-            {
-                title: 'Jacket',
-                price: 350
-            },
-            {
-                title: 'Shoes',
-                price: 250
-            },
-        ];
+
+    fetchGoods(url) {
+        return new Promise(resolve => {
+            var xhr = new XMLHttpRequest();
+            xhr.timeout = 5000;
+            xhr.ontimeout = () => console.log("Timeout")
+            xhr.open('GET', url, true);
+            xhr.send();
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                        this.goods = JSON.parse(xhr.responseText)
+                        resolve(this.goods)
+                }
+            }
+        })
     }
+
     totalPrice() {
         let sum = 0;
         this.goods.forEach(good => {
             sum += good.price;
-            console.log(sum)
+            console.log(sum);
         });
-       
     }
+
     render() {
-        let listHtml = '';
-        this.goods.forEach(good => {
-            const goodItem = new GoodsItem(good.title, good.price);
-            listHtml += goodItem.render();
-        });
-        document.querySelector('.goods-list').innerHTML = listHtml;
+        this.fetchGoods("goods.json")
+            .then(goods => {
+                let listHtml = document.querySelector('.goods-list');
+                goods.forEach((good, index) => {
+                    const goodItem = new GoodsItem(good, index, this.cartList);
+                    listHtml.appendChild(goodItem.render());
+                });
+                this.totalPrice();
+            })
+
     }
 }
 
 class CartItem {
-    constructor(title, price, amount) {
-        this.title = title;
-        this.price = price;
-        this.amount = amount;
+    constructor(item, index, cartList) {
+        this.item = item;
+        this.index = index;
+        this.title = item.title;
+        this.price = item.price;
+        this.amount = item.amount;
+        this.cartList = cartList
     }
+
     render() {
-        // здесь будет задан UI в html для CartItem
+        let cartListItem = document.createElement("li")
+        cartListItem.innerHTML = `${this.title}, ${this.price} руб/шт - ${this.amount} шт.`
+        let deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.innerHTML = '-'
+        deleteButton.onclick = () => this.cartList.deleteFromeCart(this.item, this.index)
+        cartListItem.appendChild(deleteButton);
+        return cartListItem
     }
 }
 
 class CartList {
-    constructor(){
-        this.CartItems = [];
+    constructor() {
+        this.cartItems = [];
     }
-    // Здесь будет метод для добавления товаров в корзину.
-    // здесь будет метод для удаления товаров из корзины.
+
+    addToCart(good, index) {
+        good.amount++;
+        this.cartItems[index] = good;
+        this.render()
+    }
+
+    deleteFromeCart(good, index) {
+        if (good.amount > 0) {
+            good.amount--;
+            this.cartItems[index] = good;
+            this.render();
+        }
+        if (good.amount <= 0) {
+            delete this.cartItems[index]
+            this.render();
+        }
+
+    }
     // Здесь будет метод для подсчета суммы товаров в корзине.
     render() {
-        // Для каждого элемента в обьекте CartItems будет вызван экземпляр класса CartItem.
+        let listHtml = document.querySelector('#basket');
+        let cartUl = document.createElement("ul")
+        this.cartItems.forEach((item, index) => {
+            const cartItem = new CartItem(item, index, this);
+            cartUl.appendChild(cartItem.render());
+        })
+        listHtml.innerHTML = ""
+        listHtml.appendChild(cartUl)
     }
 }
 
+
 const list = new GoodsList();
-list.fetchGoods();
-list.render();
-list.totalPrice();
+list.render()

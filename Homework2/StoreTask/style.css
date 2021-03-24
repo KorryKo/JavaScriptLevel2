@@ -21,4 +21,12 @@
 }
 .buy-button{
     background-color:#d69c5e;
+    border: none;
+    color: white;
+}
+.delete-button {
+    margin: 5px;
+    border: none;
+    background-color:#d69c5e;
+    color: white;
 }
