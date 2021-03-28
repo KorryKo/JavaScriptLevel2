@@ -1,0 +1,24 @@
+.container {
+    text-align: center;
+
+}
+
+.error-message {
+    color: red;
+    display: none;
+}
+
+.error-message-display {
+    display: inherit;
+}
+
+.comment {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+}
+
+.submit-button {
+    margin: 16px;
+}
