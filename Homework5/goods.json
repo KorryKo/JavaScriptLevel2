@@ -1,0 +1,22 @@
+[
+    {
+      "title": "Shirt",
+      "price": 150,
+      "amount": 0
+    },
+    {
+      "title": "Socks",
+      "price": 50,
+      "amount": 0
+    },
+    {
+      "title": "Jacket",
+      "price": 350,
+      "amount": 0
+    },
+    {
+      "title": "Shoes",
+      "price": 250,
+      "amount": 0
+    }
+  ]
