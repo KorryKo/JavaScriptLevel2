@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1> Форма обратной связи </h1>
+        <p>Имя:
+            <input id="name-input" type="text" size=65 name="name"><br>
+            <span class="error-message" id="nameError">Неверно заполнено поле!</span>
+        </p>
+        <p>E-mail:
+            <input id="mail-input" type="text" size=65 name="email" class="form-box__area"> <br>
+            <span class="error-message" id="mailError">Неверно заполнено поле!</span>
+        </p>
+        <p>Телефон:
+            <input id="phone-input" type="text" size=65 name="telephone" placeholder="+7(000)000-0000"> <br>
+            <span class="error-message" id="phoneError">Неверно заполнено поле!</span>
+        </p>
+        <div class="comment"> 
+            <span>Комментарий:</span>
+            <textarea cols="55" name="comment"> </textarea>
+        </div>
+        <button class="submit-button" onclick="validateForm()">Отправить</button>
+        <script src="script.js"></script>
+    </div>
+</body>
+
+</html>
